@@ -1,0 +1,21 @@
+services:
+  app:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "80:80"
+
+  database:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}  # 设置 root 密码
+      MYSQL_DATABASE: flask_demo  # 创建的数据库名
+      MYSQL_USER: ${MYSQL_USERNAME}   # 创建的用户
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD} # 用户密码
+    volumes:
+      - db_data:/var/lib/mysql  # 持久化数据卷
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # 复制初始化 SQL 脚本
+
+volumes:
+  db_data:  # 定义数据卷
